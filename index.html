@@ -1,0 +1,2054 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <!-- =========================
+    BLOK 1 — META / SEO / PWA-LITE
+  ========================== -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#070612" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Santa’s Bonus Hunt — Xmas Slot Event (Demo)</title>
+  <meta name="description" content="Konsep Event Slot Natal modern: token, pass, koleksi, ticket bonus, pity, crafting, community finale." />
+
+  <!-- =========================
+    BLOK 2 — FONTS
+  ========================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- =========================
+    BLOK 3 — THEME TOKENS (XMAS AURORA)
+  ========================== -->
+  <style>
+    :root{
+      --bg0:#070612;
+      --bg1:#0b0820;
+      --bg2:#120a2d;
+
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.11);
+      --stroke: rgba(255,255,255,.16);
+      --stroke2: rgba(255,255,255,.22);
+
+      --txt: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --faint: rgba(255,255,255,.48);
+
+      --green:#34d399;
+      --red:#fb7185;
+      --gold:#fbbf24;
+      --ice:#7dd3fc;
+      --mint:#5eead4;
+      --vio:#a78bfa;
+
+      --shadow: 0 22px 70px rgba(0,0,0,.52);
+      --shadow2: 0 14px 40px rgba(0,0,0,.45);
+
+      --r12: 14px;
+      --r16: 18px;
+      --r20: 22px;
+      --r24: 26px;
+
+      --easeOut: cubic-bezier(.16,1,.3,1);
+      --easeIn: cubic-bezier(.7,0,.2,1);
+      --easeSpring: cubic-bezier(.2,1.3,.2,1);
+
+      --pad: clamp(14px, 1.2vw, 18px);
+      --max: 1200px;
+    }
+
+    /* =========================
+      BLOK 4 — RESET / BASE
+    ========================== */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--txt);
+      background:
+        radial-gradient(1200px 700px at 30% -10%, rgba(167,139,250,.18), transparent 55%),
+        radial-gradient(1000px 650px at 80%  0%, rgba(125,211,252,.14), transparent 55%),
+        radial-gradient(900px 600px at 70% 120%, rgba(52,211,153,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    a{color:inherit}
+    button, input { font: inherit; }
+    .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
+    :focus-visible{ outline: 2px solid rgba(125,211,252,.7); outline-offset: 2px; border-radius: 10px; }
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important; transition:none!important; scroll-behavior:auto!important}
+    }
+
+    /* =========================
+      BLOK 5 — AURORA / NOISE / SNOW CANVAS LAYERS
+    ========================== */
+    .fx{
+      position:fixed; inset:0; pointer-events:none; z-index:0;
+    }
+    .aurora{
+      position:absolute; inset:-20%;
+      background:
+        radial-gradient(800px 420px at 25% 30%, rgba(125,211,252,.22), transparent 60%),
+        radial-gradient(900px 480px at 70% 25%, rgba(52,211,153,.16), transparent 62%),
+        radial-gradient(900px 520px at 55% 80%, rgba(167,139,250,.16), transparent 62%);
+      filter: blur(22px) saturate(140%);
+      opacity:.9;
+      animation: auroraFloat 12s var(--easeOut) infinite alternate;
+      transform: translate3d(0,0,0);
+    }
+    @keyframes auroraFloat{
+      from{ transform: translate3d(-2%, -1%, 0) scale(1.02); }
+      to  { transform: translate3d( 2%,  1%, 0) scale(1.06); }
+    }
+    .noise{
+      position:absolute; inset:0;
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="160" height="160" filter="url(%23n)" opacity=".25"/></svg>');
+      mix-blend-mode: overlay;
+      opacity:.22;
+    }
+    canvas#snow{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      opacity:.9;
+    }
+
+    /* =========================
+      BLOK 6 — LAYOUT WRAPPER
+    ========================== */
+    .wrap{
+      position:relative;
+      z-index:1;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: clamp(18px, 2.2vw, 28px);
+      padding-bottom: 34px;
+    }
+
+    .topbar{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      margin-top: 14px;
+      margin-bottom: 18px;
+    }
+
+    .brand{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      min-width: 240px;
+    }
+
+    .logo{
+      width:44px; height:44px;
+      border-radius: 14px;
+      box-shadow: var(--shadow2);
+      background:
+        radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.22), transparent 60%),
+        radial-gradient(55px 55px at 70% 20%, rgba(125,211,252,.25), transparent 65%),
+        linear-gradient(135deg, rgba(167,139,250,.55), rgba(52,211,153,.22));
+      border:1px solid rgba(255,255,255,.18);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-60%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      transform: rotate(20deg);
+      animation: shine 2.6s var(--easeOut) infinite;
+      opacity:.85;
+    }
+    @keyframes shine{
+      0%{ transform: translateX(-30%) rotate(20deg); opacity:.0;}
+      30%{opacity:.9}
+      100%{ transform: translateX(30%) rotate(20deg); opacity:.0;}
+    }
+
+    .brand h1{
+      margin:0;
+      font-size: clamp(18px, 1.8vw, 24px);
+      letter-spacing: -0.02em;
+      line-height:1.1;
+    }
+    .brand p{
+      margin:4px 0 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height:1.35;
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      transition: transform .18s var(--easeOut), background .18s var(--easeOut), border-color .18s var(--easeOut), box-shadow .18s var(--easeOut);
+      box-shadow: 0 10px 25px rgba(0,0,0,.22);
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.24); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+    .btn.primary{
+      background:
+        radial-gradient(80px 40px at 30% 20%, rgba(255,255,255,.16), transparent 65%),
+        linear-gradient(135deg, rgba(125,211,252,.25), rgba(167,139,250,.22), rgba(52,211,153,.14));
+      border-color: rgba(255,255,255,.26);
+      box-shadow: 0 18px 45px rgba(0,0,0,.34);
+    }
+    .btn.danger{ border-color: rgba(251,113,133,.28); background: rgba(251,113,133,.08); }
+    .btn.small{ padding: 8px 10px; border-radius: 12px; font-size: 13px; }
+    .btn:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+      transform:none;
+    }
+    .chip{
+      font-size:12px;
+      color: rgba(255,255,255,.74);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.05);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      white-space:nowrap;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:99px;
+      background: rgba(255,255,255,.28);
+      box-shadow: 0 0 0 4px rgba(255,255,255,.06);
+    }
+    .dot.live{ background: var(--green); box-shadow: 0 0 0 4px rgba(52,211,153,.12), 0 0 26px rgba(52,211,153,.28); }
+
+    /* =========================
+      BLOK 7 — GRID CARDS
+    ========================== */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+      .actions{ justify-content:flex-start; }
+      .brand{ min-width: unset; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.045));
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--r24);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px) saturate(145%);
+      -webkit-backdrop-filter: blur(18px) saturate(145%);
+      overflow:hidden;
+      position:relative;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(900px 240px at 20% 0%, rgba(125,211,252,.14), transparent 55%),
+        radial-gradient(700px 220px at 80% 0%, rgba(167,139,250,.13), transparent 55%);
+      pointer-events:none;
+      opacity:.85;
+    }
+    .card > *{ position:relative; z-index:1; }
+
+    .cardHead{
+      padding: var(--pad);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .cardHead h2{
+      margin:0;
+      font-size: 14px;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.78);
+    }
+    .sub{
+      margin:6px 0 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height:1.35;
+    }
+    .cardBody{ padding: var(--pad); }
+
+    .row{ display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
+    .kpi{
+      display:flex; gap: 10px; align-items:center;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+    }
+    .kpi b{ font-size: 14px; letter-spacing: .01em; }
+    .kpi span{ color: var(--muted); font-size: 12.5px; }
+    .kpi .ico{ width:28px;height:28px;border-radius: 12px; display:grid; place-items:center; background: rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); }
+
+    .bar{
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+      position:relative;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width: 0%;
+      border-radius: 999px;
+      background:
+        radial-gradient(16px 10px at 20% 50%, rgba(255,255,255,.22), transparent 60%),
+        linear-gradient(90deg, rgba(125,211,252,.45), rgba(167,139,250,.42), rgba(52,211,153,.28));
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+      transition: width .45s var(--easeOut);
+    }
+    .mini{
+      font-size: 12.5px;
+      color: var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* =========================
+      BLOK 8 — SLOT MACHINE
+    ========================== */
+    .slotWrap{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .slotWrap{ grid-template-columns: 1fr; }
+    }
+
+    .machine{
+      border-radius: var(--r24);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
+      padding: 14px;
+      overflow:hidden;
+      position:relative;
+    }
+    .machine:before{
+      content:"";
+      position:absolute; inset:-40%;
+      background:
+        radial-gradient(680px 260px at 25% 20%, rgba(125,211,252,.16), transparent 60%),
+        radial-gradient(600px 260px at 85% 20%, rgba(167,139,250,.14), transparent 60%),
+        radial-gradient(680px 320px at 50% 90%, rgba(52,211,153,.10), transparent 60%);
+      filter: blur(14px);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .machineInner{ position:relative; z-index:1; }
+
+    .reels{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      padding: 10px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.11);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+    }
+    .reel{
+      height: 240px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+      position:relative;
+    }
+    .reel:after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.55), transparent 22%, transparent 78%, rgba(0,0,0,.55)),
+        radial-gradient(120px 60px at 50% 50%, transparent 56%, rgba(255,255,255,.05));
+      pointer-events:none;
+    }
+    .cells{
+      height:100%;
+      display:grid;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 8px;
+      padding: 10px;
+    }
+    .cell{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      display:grid;
+      place-items:center;
+      font-size: clamp(26px, 3.4vw, 34px);
+      box-shadow: 0 10px 18px rgba(0,0,0,.20);
+      position:relative;
+      overflow:hidden;
+      user-select:none;
+    }
+    .cell.glow{
+      animation: winGlow .9s var(--easeOut) 1;
+      border-color: rgba(251,191,36,.35);
+      box-shadow: 0 22px 60px rgba(251,191,36,.16);
+    }
+    @keyframes winGlow{
+      0%{ transform: translateY(0) scale(1); filter:saturate(1); }
+      45%{ transform: translateY(-2px) scale(1.03); filter:saturate(1.3); }
+      100%{ transform: translateY(0) scale(1); filter:saturate(1); }
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .betBox{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .bet{
+      padding: 9px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      min-width: 170px;
+      justify-content:space-between;
+    }
+    .bet input{
+      width: 94px;
+      border: none;
+      outline: none;
+      color: var(--txt);
+      background: transparent;
+      text-align:right;
+      font-weight:700;
+      letter-spacing:.01em;
+    }
+
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .panel{
+      border-radius: var(--r24);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      padding: 12px;
+    }
+    .panel h3{
+      margin:0 0 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: rgba(255,255,255,.78);
+    }
+    .panel p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height:1.4;
+    }
+
+    .pill{
+      display:flex; justify-content:space-between; align-items:center;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      margin-top: 10px;
+      gap: 10px;
+    }
+    .pill b{ font-size: 13px; }
+    .pill small{ color: var(--muted); }
+
+    /* =========================
+      BLOK 9 — MISSIONS / COLLECTION / TREE
+    ========================== */
+    .missions{
+      display:grid;
+      gap: 10px;
+    }
+    .mission{
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+    }
+    .missionTop{
+      display:flex; justify-content:space-between; align-items:flex-start; gap: 10px;
+    }
+    .mission b{ font-size: 13px; }
+    .mission .desc{ color: var(--muted); font-size: 12.5px; margin-top: 4px; line-height:1.35; }
+    .mission .prog{ margin-top: 10px; display:flex; gap: 10px; align-items:center; justify-content:space-between; color: rgba(255,255,255,.78); font-size: 12.5px; }
+    .mission .prog .bar{ flex:1; height: 10px; }
+    .mission .prog .bar > i{ transition: width .35s var(--easeOut); }
+
+    .collection{
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 520px){
+      .collection{ grid-template-columns: repeat(4, 1fr); }
+    }
+    .gift{
+      aspect-ratio: 1/1;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      display:grid;
+      place-items:center;
+      position:relative;
+      overflow:hidden;
+      cursor: default;
+      user-select:none;
+    }
+    .gift span{ font-size: 24px; filter: drop-shadow(0 12px 18px rgba(0,0,0,.35)); }
+    .gift.locked{
+      opacity:.55;
+      filter: saturate(.6);
+    }
+    .gift.locked span{ filter: blur(1px) drop-shadow(0 12px 18px rgba(0,0,0,.35)); }
+    .gift small{
+      position:absolute;
+      left: 8px; right: 8px; bottom: 8px;
+      font-size: 10.5px;
+      color: rgba(255,255,255,.72);
+      text-align:center;
+      text-shadow: 0 10px 20px rgba(0,0,0,.45);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .tiers{
+      display:grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .tier{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+    }
+    .tier b{ font-size: 13px; }
+    .tier .meta{ color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+
+    /* =========================
+      BLOK 10 — MODALS + TOAST
+    ========================== */
+    .backdrop{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display:none;
+      z-index: 50;
+      padding: 20px;
+    }
+    .backdrop.show{ display:flex; align-items:center; justify-content:center; }
+    .modal{
+      width: min(880px, 100%);
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      box-shadow: 0 30px 120px rgba(0,0,0,.62);
+      overflow:hidden;
+      position:relative;
+    }
+    .modalHead{
+      padding: 16px 16px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .modalHead h3{ margin:0; font-size: 16px; letter-spacing: -0.01em; }
+    .modalHead p{ margin:6px 0 0; color: var(--muted); font-size: 12.5px; line-height:1.35; }
+    .modalBody{ padding: 16px; }
+    .modalGrid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 860px){
+      .modalGrid{ grid-template-columns: 1fr; }
+    }
+    .pickGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .pick{
+      aspect-ratio: 1/1;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      transition: transform .15s var(--easeOut), background .15s var(--easeOut), border-color .15s var(--easeOut);
+      position:relative;
+      overflow:hidden;
+      user-select:none;
+    }
+    .pick:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.22); }
+    .pick:active{ transform: translateY(0) scale(.99); }
+    .pick.revealed{ cursor: default; opacity:.92; }
+    .pick .ico{ font-size: 28px; filter: drop-shadow(0 12px 18px rgba(0,0,0,.35)); }
+    .pick .label{
+      position:absolute;
+      left: 10px; right: 10px; bottom: 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,.80);
+      text-align:center;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .toastHost{
+      position:fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 80;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      pointer-events:none;
+      width: min(560px, calc(100% - 22px));
+    }
+    .toast{
+      pointer-events:none;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      color: rgba(255,255,255,.92);
+      animation: toastIn .24s var(--easeOut) both;
+    }
+    @keyframes toastIn{
+      from{ transform: translateY(10px); opacity:0; }
+      to  { transform: translateY(0); opacity:1; }
+    }
+    .toast small{ color: rgba(255,255,255,.68); display:block; margin-top: 2px; }
+
+    /* =========================
+      BLOK 11 — FOOTER NOTE
+    ========================== */
+    .foot{
+      margin-top: 16px;
+      color: rgba(255,255,255,.58);
+      font-size: 12px;
+      line-height:1.45;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- =========================
+    BLOK 12 — FX BACKDROP
+  ========================== -->
+  <div class="fx" aria-hidden="true">
+    <div class="aurora"></div>
+    <div class="noise"></div>
+    <canvas id="snow"></canvas>
+  </div>
+
+  <!-- =========================
+    BLOK 13 — APP WRAP
+  ========================== -->
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Santa’s Bonus Hunt <span style="opacity:.7;font-weight:800">— Xmas Slot Event</span></h1>
+          <p>Demo konsep modern: <b>Noel Pass</b>, <b>Daily Missions</b>, <b>Ticket Bonus</b>, <b>12 Gifts Collection</b>, <b>Pity + Craft</b>, & <b>Community Snow Tree</b>.</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <span class="chip"><span class="dot live"></span><span id="eventStatus">LIVE</span></span>
+        <button class="btn small" id="btnHow" type="button">📜 Cara Main</button>
+        <button class="btn small danger" id="btnReset" type="button">♻️ Reset Demo</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: SLOT + SIDE PANELS -->
+      <div class="card">
+        <div class="cardHead">
+          <div>
+            <h2>Slot Machine</h2>
+            <div class="sub">Spin pakai koin (bet), dapat coin win + progress event: Candy 🍬 & XP ❄️. Ticket 🎟️ buat Bonus Game “Santa Pick”.</div>
+          </div>
+          <div class="row">
+            <span class="chip" title="Event menyimpan data di localStorage"><span class="dot"></span> Local Demo</span>
+          </div>
+        </div>
+
+        <div class="cardBody">
+          <div class="slotWrap">
+            <div class="machine">
+              <div class="machineInner">
+                <div class="reels" id="reels" aria-label="Slot reels 5x3"></div>
+
+                <div class="controls">
+                  <div class="betBox">
+                    <div class="bet" title="Bet koin per spin (demo)">
+                      <span style="color:rgba(255,255,255,.78);font-size:12.5px;">Bet</span>
+                      <label class="sr-only" for="betInput">Bet</label>
+                      <input id="betInput" inputmode="numeric" value="100" />
+                    </div>
+
+                    <button class="btn primary" id="btnSpin" type="button">🎰 SPIN</button>
+                    <button class="btn" id="btnAuto" type="button">🔁 Auto (10)</button>
+                  </div>
+
+                  <div class="row">
+                    <button class="btn" id="btnBuyTicket" type="button">🎟️ Beli Ticket</button>
+                    <button class="btn primary" id="btnUseTicket" type="button">🎁 Pakai Ticket</button>
+                  </div>
+                </div>
+
+                <div class="foot">
+                  Catatan fairness demo: <b>Pity</b> aktif di Ticket (Rare tiap 3 tiket, Epic/missing tiap 8 tiket). Dupe item → jadi <b>Snow Dust</b> untuk craft.
+                </div>
+              </div>
+            </div>
+
+            <div class="side">
+              <div class="panel">
+                <h3>Wallet</h3>
+                <div class="row" id="walletRow" style="margin-top:10px"></div>
+                <div class="pill">
+                  <div>
+                    <b id="pityText">Pity: Rare 0/3 · Epic 0/8</b>
+                    <div class="sub" style="margin:4px 0 0">Pity hanya berlaku saat pakai 🎟️ Ticket.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <h3>Quick Tips</h3>
+                <p>Ambil Candy 🍬 dari <b>Missions</b> dan spin. Tukar Candy → 🎟️ Ticket. Ticket membuka <b>Bonus Game</b> buat drop hadiah koleksi.</p>
+                <div class="pill">
+                  <div>
+                    <b>Dupe Protection</b>
+                    <div class="sub" style="margin:4px 0 0">Hadiah yang sudah kamu punya otomatis jadi Dust ✨.</div>
+                  </div>
+                  <span class="chip">Craft Ready</span>
+                </div>
+              </div>
+
+              <div class="panel">
+                <h3>Craft Missing Gift</h3>
+                <p>Jika RNG jelek, craft 1 hadiah yang belum didapat.</p>
+                <div class="row" style="margin-top:10px">
+                  <button class="btn primary" id="btnCraft" type="button">🧪 Craft 1 Gift</button>
+                  <button class="btn" id="btnDailyGift" type="button">🎄 Daily Gift</button>
+                </div>
+                <div class="sub" style="margin-top:8px" id="craftHint">Biaya: 30 Candy + 40 Dust (demo).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: MISSIONS + PASS + COLLECTION + TREE -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <div class="card">
+          <div class="cardHead">
+            <div>
+              <h2>Noel Pass (30 Level)</h2>
+              <div class="sub">XP ❄️ naik saat spin & bonus. Level up memberi hadiah kecil (coin/candy) agar progress selalu terasa.</div>
+            </div>
+          </div>
+          <div class="cardBody">
+            <div class="row" style="justify-content:space-between;align-items:flex-end">
+              <div>
+                <div style="font-weight:900;font-size:18px;letter-spacing:-.02em" id="passLevelText">Level 1</div>
+                <div class="sub" id="passMeta">XP 0 / 120</div>
+              </div>
+              <span class="chip"><span class="dot"></span><span id="passRewardHint">Next reward: +250 coins</span></span>
+            </div>
+            <div class="bar" style="margin-top:12px"><i id="passBar"></i></div>
+            <div class="mini">
+              <span>Spin: +5 XP</span>
+              <span>Ticket Bonus: +20 XP</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="cardHead">
+            <div>
+              <h2>Daily Missions</h2>
+              <div class="sub">3 misi cepat → Candy 🍬. Reset harian (berdasarkan tanggal perangkat).</div>
+            </div>
+            <button class="btn small" id="btnForceResetMissions" type="button">🕛 Reset Today</button>
+          </div>
+          <div class="cardBody">
+            <div class="missions" id="missions"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="cardHead">
+            <div>
+              <h2>12 Gifts of Noel</h2>
+              <div class="sub">Drop utama dari 🎟️ Ticket Bonus. Lengkap 12 → hadiah besar (demo).</div>
+            </div>
+            <span class="chip"><span class="dot"></span><span id="collectMeta">0/12 Collected</span></span>
+          </div>
+          <div class="cardBody">
+            <div class="collection" id="collection"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="cardHead">
+            <div>
+              <h2>Community Snow Tree</h2>
+              <div class="sub">Finale style: Spin (+1) & Ticket (+5) menambah poin. Claim tier hadiah saat terpenuhi.</div>
+            </div>
+            <span class="chip"><span class="dot"></span><span id="treePoints">0 pts</span></span>
+          </div>
+          <div class="cardBody">
+            <div class="bar"><i id="treeBar"></i></div>
+            <div class="tiers" id="tiers"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+    BLOK 14 — MODAL: HOW TO PLAY
+  ========================== -->
+  <div class="backdrop" id="howBackdrop" role="dialog" aria-modal="true" aria-labelledby="howTitle">
+    <div class="modal">
+      <div class="modalHead">
+        <div>
+          <h3 id="howTitle">📜 Cara Main (Ringkas)</h3>
+          <p>Tujuan event: kumpulkan Candy 🍬 untuk beli Ticket 🎟️, buka Bonus Game, lengkapi 12 hadiah, naikkan Noel Pass.</p>
+        </div>
+        <button class="btn small" id="btnHowClose" type="button">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="modalGrid">
+          <div class="panel">
+            <h3>Loop Modern</h3>
+            <p><b>SPIN</b> pakai coin bet → dapat win coin + drop Candy + XP. Candy dipakai untuk <b>Beli Ticket</b> → <b>Pakai Ticket</b> untuk Bonus Game “Santa Pick” → drop hadiah koleksi + XP besar. Dupe jadi Dust → bisa <b>Craft</b> hadiah yang belum ada.</p>
+            <div class="pill"><div><b>Pity System</b><div class="sub" style="margin:4px 0 0">Rare dijamin tiap 3 ticket. Epic / missing dijamin tiap 8 ticket (demo).</div></div></div>
+          </div>
+          <div class="panel">
+            <h3>Rule Demo</h3>
+            <p>Semua angka hanyalah contoh untuk UI/UX. Kamu bisa ubah drop rate, biaya ticket, dan hadiah pass di bagian <b>CONFIG</b> (JS).</p>
+            <div class="pill">
+              <div><b>Quick Start</b><div class="sub" style="margin:4px 0 0">Klik 🎰 SPIN → selesaikan Missions → Beli 🎟️ Ticket → Pakai Ticket.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="foot" style="margin-top: 12px;">
+          Deploy ke Vercel: simpan file ini sebagai <b>index.html</b> → push ke GitHub → Import Project di Vercel (Framework: Other) → Deploy.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+    BLOK 15 — MODAL: BONUS GAME (SANTA PICK)
+  ========================== -->
+  <div class="backdrop" id="bonusBackdrop" role="dialog" aria-modal="true" aria-labelledby="bonusTitle">
+    <div class="modal">
+      <div class="modalHead">
+        <div>
+          <h3 id="bonusTitle">🎁 Santa Pick Bonus</h3>
+          <p>Pilih <b>3</b> hadiah. Tiap pick memberi coin reward + chance koleksi. (Ticket sudah terpakai.)</p>
+        </div>
+        <button class="btn small" id="btnBonusClose" type="button">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="modalGrid">
+          <div>
+            <div class="pickGrid" id="pickGrid"></div>
+            <div class="foot" id="pickFoot" style="margin-top:12px">Pick tersisa: <b id="pickLeft">3</b></div>
+          </div>
+          <div class="panel">
+            <h3>Bonus Summary</h3>
+            <p id="bonusSummary">Pilih box untuk membuka multiplier & gift. Bonus juga memberi XP & Candy.</p>
+            <div class="pill">
+              <div>
+                <b id="bonusGain">+0 coins</b>
+                <div class="sub" style="margin:4px 0 0" id="bonusExtra">+0 XP · +0 Candy</div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:10px">
+              <button class="btn primary" id="btnBonusFinish" type="button" disabled>✅ Selesai</button>
+              <button class="btn" id="btnBonusRevealAll" type="button">👀 Reveal</button>
+            </div>
+            <div class="foot" style="margin-top:10px">
+              Tip: Pity akan otomatis memastikan hadiah lebih bagus setelah beberapa ticket.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+    BLOK 16 — TOAST HOST
+  ========================== -->
+  <div class="toastHost" id="toastHost" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- =========================
+    BLOK 17 — APP SCRIPT
+  ========================== -->
+  <script>
+    /* =========================================================
+      BLOK 17A — CONFIG (EDIT ANGKA DI SINI)
+    ========================================================= */
+    const CONFIG = {
+      storageKey: "xmas_slot_event_demo_v1",
+      pass: { maxLevel: 30, baseNeed: 120, addPerLevel: 20, spinXP: 5, ticketXP: 20 },
+      economy: {
+        startCoins: 10000,
+        betMin: 50,
+        betMax: 5000,
+        buyTicketCandyCost: 25,
+        craftCandyCost: 30,
+        craftDustCost: 40,
+        dailyGiftCoins: 5000,
+        dailyGiftCandy: 10,
+        spinCandyChance: 0.42,
+        spinCandyMin: 0,
+        spinCandyMax: 3,
+        spinExtraCandyOnWin: 2
+      },
+      pity: {
+        rareEvery: 3,       // setiap 3 ticket: Rare+
+        epicEvery: 8        // setiap 8 ticket: Epic+ / missing priority
+      },
+      missions: [
+        { id:"spin",  title:"Spin Sprint",   desc:"Lakukan 20 spin hari ini.", goal:20, rewardCandy:18 },
+        { id:"win",   title:"Warm Win",      desc:"Menang 3 kali (line win).", goal:3,  rewardCandy:22 },
+        { id:"bonus", title:"Santa Visit",   desc:"Masuk Bonus (pakai ticket) 1x.", goal:1, rewardCandy:26 },
+      ],
+      collectionCompleteBonus: { coins: 12000, candy: 80, title: "Winter Blessed" },
+      tree: {
+        tiers: [
+          { pts: 100, reward:{ coins: 1200, candy: 10 }, label:"Tier 1 — Warm Up" },
+          { pts: 300, reward:{ coins: 2600, candy: 18 }, label:"Tier 2 — Snow Spark" },
+          { pts: 600, reward:{ coins: 5200, candy: 28 }, label:"Tier 3 — Aurora Glow" },
+          { pts: 1000,reward:{ coins: 9000, candy: 45 }, label:"Tier 4 — Grand Noel" },
+        ]
+      }
+    };
+
+    /* =========================================================
+      BLOK 17B — SYMBOLS + PAYTABLE (DEMO)
+    ========================================================= */
+    const SYMBOLS = [
+      { id:"WILD",  ch:"⭐", name:"Star Wild",  w: 5 },
+      { id:"SANTA", ch:"🎅", name:"Santa",      w: 4 },
+      { id:"TREE",  ch:"🎄", name:"Tree",       w: 4 },
+      { id:"GIFT",  ch:"🎁", name:"Gift",       w: 4 },
+      { id:"BELL",  ch:"🔔", name:"Bell",       w: 3 },
+      { id:"CANE",  ch:"🍭", name:"Candy Cane", w: 3 },
+      { id:"SNOW",  ch:"❄️", name:"Snow",       w: 3 },
+      { id:"AUR",   ch:"🟣", name:"Aurora",     w: 2 },
+    ];
+
+    // payout multiplier relative to bet (kalau 5 sama di 1 row)
+    const PAYTABLE = {
+      WILD: 18,
+      SANTA: 14,
+      TREE: 12,
+      GIFT: 10,
+      BELL: 8,
+      CANE: 7,
+      SNOW: 6,
+      AUR: 5
+    };
+
+    /* =========================================================
+      BLOK 17C — 12 GIFTS COLLECTION (DEMO)
+    ========================================================= */
+    const GIFTS = [
+      { id:"bell",   icon:"🔔", name:"Jingle Bell",     rarity:"common" },
+      { id:"star",   icon:"⭐", name:"Guiding Star",    rarity:"common" },
+      { id:"cane",   icon:"🍭", name:"Candy Cane",     rarity:"common" },
+      { id:"sock",   icon:"🧦", name:"Red Stocking",   rarity:"common" },
+      { id:"hat",    icon:"🎩", name:"Santa Hat",      rarity:"rare" },
+      { id:"cookie", icon:"🍪", name:"Cocoa Cookie",   rarity:"rare" },
+      { id:"wreath", icon:"🎀", name:"Green Wreath",   rarity:"rare" },
+      { id:"sled",   icon:"🛷", name:"Sleigh Ride",    rarity:"rare" },
+      { id:"snowg",  icon:"⛄", name:"Snow Guardian",  rarity:"epic" },
+      { id:"deer",   icon:"🦌", name:"Reindeer Luck",  rarity:"epic" },
+      { id:"aurora", icon:"🌌", name:"Aurora Night",   rarity:"epic" },
+      { id:"crown",  icon:"👑", name:"Thunder Crown",  rarity:"epic" },
+    ];
+
+    const RARITY_WEIGHT = {
+      common: 70,
+      rare: 24,
+      epic: 6
+    };
+
+    /* =========================================================
+      BLOK 17D — STATE + STORAGE
+    ========================================================= */
+    const $ = (q, root=document) => root.querySelector(q);
+
+    const todayKey = () => {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const da = String(d.getDate()).padStart(2,"0");
+      return `${y}-${m}-${da}`;
+    };
+
+    const clamp = (n,min,max) => Math.max(min, Math.min(max, n));
+    const rand = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
+
+    function pickWeighted(items, getW){
+      const total = items.reduce((a,it)=>a+getW(it),0);
+      let r = Math.random()*total;
+      for(const it of items){
+        r -= getW(it);
+        if(r <= 0) return it;
+      }
+      return items[items.length-1];
+    }
+
+    const DEFAULT_STATE = () => ({
+      v: 1,
+      coins: CONFIG.economy.startCoins,
+      candy: 0,
+      tickets: 0,
+      dust: 0,
+
+      // pass
+      passLevel: 1,
+      passXP: 0,
+
+      // counts for missions
+      day: todayKey(),
+      missionClaimed: { spin:false, win:false, bonus:false },
+      mSpin: 0,
+      mWin: 0,
+      mBonus: 0,
+
+      // pity
+      pityRare: 0,
+      pityEpic: 0,
+
+      // collection
+      owned: {},       // {giftId:true}
+      collectedCount: 0,
+      completedRewardClaimed: false,
+
+      // community tree
+      treePoints: 0,
+      treeClaimed: Array(CONFIG.tree.tiers.length).fill(false),
+
+      // daily gift
+      dailyGiftDay: "",
+      dailyGiftClaimed: false
+    });
+
+    let STATE = loadState();
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(CONFIG.storageKey);
+        if(!raw) return DEFAULT_STATE();
+        const s = JSON.parse(raw);
+        // basic migration
+        return { ...DEFAULT_STATE(), ...s };
+      }catch{
+        return DEFAULT_STATE();
+      }
+    }
+
+    function saveState(){
+      localStorage.setItem(CONFIG.storageKey, JSON.stringify(STATE));
+    }
+
+    function ensureDailyReset(){
+      const t = todayKey();
+      if(STATE.day !== t){
+        STATE.day = t;
+        STATE.missionClaimed = { spin:false, win:false, bonus:false };
+        STATE.mSpin = 0; STATE.mWin = 0; STATE.mBonus = 0;
+        STATE.dailyGiftDay = t;
+        STATE.dailyGiftClaimed = false;
+        toast("Missions reset ✨", "Misi harian diperbarui untuk hari ini.");
+        saveState();
+      }
+      // init daily gift marker
+      if(!STATE.dailyGiftDay) STATE.dailyGiftDay = STATE.day;
+      if(STATE.dailyGiftDay !== STATE.day){
+        STATE.dailyGiftDay = STATE.day;
+        STATE.dailyGiftClaimed = false;
+      }
+    }
+
+    /* =========================================================
+      BLOK 17E — UI ELEMENTS
+    ========================================================= */
+    const el = {
+      reels: $("#reels"),
+      btnSpin: $("#btnSpin"),
+      btnAuto: $("#btnAuto"),
+      betInput: $("#betInput"),
+
+      walletRow: $("#walletRow"),
+      pityText: $("#pityText"),
+
+      passLevelText: $("#passLevelText"),
+      passMeta: $("#passMeta"),
+      passBar: $("#passBar"),
+      passRewardHint: $("#passRewardHint"),
+
+      missions: $("#missions"),
+
+      collection: $("#collection"),
+      collectMeta: $("#collectMeta"),
+
+      treePoints: $("#treePoints"),
+      treeBar: $("#treeBar"),
+      tiers: $("#tiers"),
+
+      btnBuyTicket: $("#btnBuyTicket"),
+      btnUseTicket: $("#btnUseTicket"),
+      btnCraft: $("#btnCraft"),
+      craftHint: $("#craftHint"),
+      btnDailyGift: $("#btnDailyGift"),
+
+      // modals
+      howBackdrop: $("#howBackdrop"),
+      btnHow: $("#btnHow"),
+      btnHowClose: $("#btnHowClose"),
+
+      bonusBackdrop: $("#bonusBackdrop"),
+      btnBonusClose: $("#btnBonusClose"),
+      pickGrid: $("#pickGrid"),
+      pickLeft: $("#pickLeft"),
+      pickFoot: $("#pickFoot"),
+      bonusSummary: $("#bonusSummary"),
+      bonusGain: $("#bonusGain"),
+      bonusExtra: $("#bonusExtra"),
+      btnBonusFinish: $("#btnBonusFinish"),
+      btnBonusRevealAll: $("#btnBonusRevealAll"),
+
+      btnReset: $("#btnReset"),
+      btnForceResetMissions: $("#btnForceResetMissions"),
+      toastHost: $("#toastHost"),
+    };
+
+    /* =========================================================
+      BLOK 17F — TOAST
+    ========================================================= */
+    function toast(title, desc=""){
+      const t = document.createElement("div");
+      t.className = "toast";
+      t.innerHTML = `<b>${escapeHtml(title)}</b>${desc ? `<small>${escapeHtml(desc)}</small>` : ""}`;
+      el.toastHost.appendChild(t);
+      setTimeout(()=>{ t.style.opacity = "0"; t.style.transform = "translateY(8px)"; }, 2400);
+      setTimeout(()=> t.remove(), 3000);
+    }
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    /* =========================================================
+      BLOK 17G — PASS LOGIC
+    ========================================================= */
+    function xpNeedFor(level){
+      return CONFIG.pass.baseNeed + (level-1)*CONFIG.pass.addPerLevel;
+    }
+    function nextPassRewardHint(level){
+      const coins = 250 * level;
+      const candy = (level % 3 === 0) ? 8 : 0;
+      return `Next reward: +${coins} coins${candy?` +${candy} Candy`:``}`;
+    }
+    function addXP(amount, reason=""){
+      if(amount <= 0) return;
+      STATE.passXP += amount;
+      let leveled = 0;
+
+      while(STATE.passLevel < CONFIG.pass.maxLevel){
+        const need = xpNeedFor(STATE.passLevel);
+        if(STATE.passXP < need) break;
+
+        STATE.passXP -= need;
+        STATE.passLevel += 1;
+        leveled++;
+
+        // grant reward on level-up (demo)
+        const coins = 250 * STATE.passLevel;
+        STATE.coins += coins;
+        let candy = 0;
+        if(STATE.passLevel % 3 === 0){
+          candy = 8;
+          STATE.candy += candy;
+        }
+        toast(`Noel Pass Level Up! ❄️ Lv ${STATE.passLevel}`, `Reward: +${coins} coins${candy?` · +${candy} Candy`:``}`);
+      }
+
+      if(reason) {
+        // silent; toast is reserved for big events
+      }
+      saveState();
+      renderAll();
+    }
+
+    /* =========================================================
+      BLOK 17H — MISSIONS
+    ========================================================= */
+    function missionProgress(m){
+      if(m.id==="spin") return STATE.mSpin;
+      if(m.id==="win") return STATE.mWin;
+      if(m.id==="bonus") return STATE.mBonus;
+      return 0;
+    }
+    function setMissionProgress(id, delta){
+      if(id==="spin") STATE.mSpin += delta;
+      if(id==="win") STATE.mWin += delta;
+      if(id==="bonus") STATE.mBonus += delta;
+    }
+    function canClaim(m){
+      const prog = missionProgress(m);
+      return prog >= m.goal && !STATE.missionClaimed[m.id];
+    }
+    function claimMission(m){
+      if(!canClaim(m)) return;
+      STATE.missionClaimed[m.id] = true;
+      STATE.candy += m.rewardCandy;
+      toast(`Mission claimed: ${m.title} ✅`, `+${m.rewardCandy} Candy 🍬`);
+      saveState();
+      renderAll();
+    }
+
+    /* =========================================================
+      BLOK 17I — COLLECTION LOGIC
+    ========================================================= */
+    function countCollected(){
+      return Object.keys(STATE.owned).length;
+    }
+
+    function grantGift(gift){
+      const had = !!STATE.owned[gift.id];
+      if(had){
+        const dustGain = gift.rarity === "epic" ? 12 : (gift.rarity === "rare" ? 8 : 5);
+        STATE.dust += dustGain;
+        toast("Duplicate Gift → Snow Dust ✨", `+${dustGain} Dust (dupe: ${gift.name})`);
+      }else{
+        STATE.owned[gift.id] = true;
+        toast("New Gift Collected! 🎁", `${gift.icon} ${gift.name}`);
+      }
+
+      // check completion
+      const now = countCollected();
+      STATE.collectedCount = now;
+
+      if(now >= GIFTS.length && !STATE.completedRewardClaimed){
+        STATE.completedRewardClaimed = true;
+        STATE.coins += CONFIG.collectionCompleteBonus.coins;
+        STATE.candy += CONFIG.collectionCompleteBonus.candy;
+        toast("12/12 Complete — Grand Noel! 👑", `+${CONFIG.collectionCompleteBonus.coins} coins · +${CONFIG.collectionCompleteBonus.candy} Candy · Title: ${CONFIG.collectionCompleteBonus.title}`);
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function chooseGiftByRarity(rarity, preferMissing=true){
+      const pool = GIFTS.filter(g => g.rarity === rarity);
+      if(preferMissing){
+        const missing = pool.filter(g => !STATE.owned[g.id]);
+        if(missing.length) return missing[rand(0, missing.length-1)];
+      }
+      return pool[rand(0, pool.length-1)];
+    }
+
+    function rollGiftRarity(){
+      return pickWeighted(["common","rare","epic"], r => RARITY_WEIGHT[r]);
+    }
+
+    /* =========================================================
+      BLOK 17J — COMMUNITY TREE
+    ========================================================= */
+    function addTreePoints(p){
+      if(p <= 0) return;
+      STATE.treePoints += p;
+      saveState();
+      renderAll();
+    }
+
+    function claimTier(i){
+      const tier = CONFIG.tree.tiers[i];
+      if(STATE.treeClaimed[i]) return;
+      if(STATE.treePoints < tier.pts) return;
+
+      STATE.treeClaimed[i] = true;
+      STATE.coins += tier.reward.coins;
+      STATE.candy += tier.reward.candy;
+      toast(`Snow Tree Reward Claimed 🎄`, `+${tier.reward.coins} coins · +${tier.reward.candy} Candy`);
+      saveState();
+      renderAll();
+    }
+
+    /* =========================================================
+      BLOK 17K — SLOT ENGINE (UI SHUFFLE DEMO)
+    ========================================================= */
+    let spinning = false;
+    let autoLeft = 0;
+
+    function symbolById(id){ return SYMBOLS.find(s=>s.id===id); }
+
+    function pickSymbol(){
+      return pickWeighted(SYMBOLS, s => s.w);
+    }
+
+    // 5 reels x 3 rows
+    let grid = Array.from({length:3}, ()=> Array.from({length:5}, ()=> pickSymbol().id));
+
+    function buildReels(){
+      el.reels.innerHTML = "";
+      for(let c=0; c<5; c++){
+        const reel = document.createElement("div");
+        reel.className = "reel";
+        const cells = document.createElement("div");
+        cells.className = "cells";
+
+        for(let r=0; r<3; r++){
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          cell.dataset.r = r;
+          cell.dataset.c = c;
+          cell.textContent = symbolById(grid[r][c]).ch;
+          cells.appendChild(cell);
+        }
+
+        reel.appendChild(cells);
+        el.reels.appendChild(reel);
+      }
+    }
+
+    function getBet(){
+      const n = Number(String(el.betInput.value).replace(/[^\d]/g,""));
+      const bet = clamp(isFinite(n) ? n : 100, CONFIG.economy.betMin, CONFIG.economy.betMax);
+      el.betInput.value = String(bet);
+      return bet;
+    }
+
+    function clearWinGlow(){
+      el.reels.querySelectorAll(".cell.glow").forEach(x=>x.classList.remove("glow"));
+    }
+
+    function computeWinLines(finalGrid, bet){
+      // 3 horizontal lines
+      const lines = [
+        finalGrid[0],
+        finalGrid[1],
+        finalGrid[2],
+      ];
+
+      let total = 0;
+      const winningCells = [];
+
+      for(let r=0; r<3; r++){
+        const row = lines[r];
+        // treat WILD as matching best symbol: choose most common non-wild in row
+        const nonWild = row.filter(id => id !== "WILD");
+        let target = nonWild.length ? mode(nonWild) : "WILD";
+
+        // check all match (allow WILD)
+        const ok = row.every(id => id === target || id === "WILD" || (target==="WILD" && id==="WILD"));
+        if(ok){
+          const mult = PAYTABLE[target] ?? 4;
+          const win = Math.round(bet * mult);
+          total += win;
+          for(let c=0;c<5;c++) winningCells.push({r, c});
+        }
+      }
+
+      return { total, winningCells };
+    }
+
+    function mode(arr){
+      const m = new Map();
+      let best = arr[0], bestN=0;
+      for(const x of arr){
+        const n = (m.get(x) || 0) + 1;
+        m.set(x,n);
+        if(n > bestN){ bestN=n; best=x; }
+      }
+      return best;
+    }
+
+    function renderGridToUI(){
+      const cells = el.reels.querySelectorAll(".cell");
+      cells.forEach(cell=>{
+        const r = Number(cell.dataset.r);
+        const c = Number(cell.dataset.c);
+        cell.textContent = symbolById(grid[r][c]).ch;
+      });
+    }
+
+    async function spinOnce(){
+      ensureDailyReset();
+      if(spinning) return;
+
+      const bet = getBet();
+      if(STATE.coins < bet){
+        toast("Koin tidak cukup 💸", "Claim Daily Gift atau kurangi bet.");
+        return;
+      }
+
+      spinning = true;
+      el.btnSpin.disabled = true;
+      el.btnAuto.disabled = true;
+      el.btnBuyTicket.disabled = true;
+      el.btnUseTicket.disabled = true;
+      clearWinGlow();
+
+      STATE.coins -= bet;
+
+      // mission progress: spin
+      setMissionProgress("spin", 1);
+
+      // animate by shuffling UI quickly
+      const reels = Array.from({length:5}, (_,c)=>c);
+      const timers = [];
+      const stopAt = reels.map((c)=> 700 + c*140 + rand(0,120));
+      const started = performance.now();
+
+      // temp shuffle
+      function tick(){
+        const now = performance.now();
+        for(let c=0;c<5;c++){
+          if(now - started < stopAt[c]){
+            for(let r=0;r<3;r++){
+              grid[r][c] = pickSymbol().id;
+            }
+          }
+        }
+        renderGridToUI();
+        if(now - started < Math.max(...stopAt)){
+          timers.push(requestAnimationFrame(tick));
+        }
+      }
+      tick();
+
+      await wait(Math.max(...stopAt) + 60);
+
+      // final grid
+      for(let c=0;c<5;c++){
+        for(let r=0;r<3;r++){
+          grid[r][c] = pickSymbol().id;
+        }
+      }
+      renderGridToUI();
+
+      const res = computeWinLines(grid, bet);
+      if(res.total > 0){
+        STATE.coins += res.total;
+        setMissionProgress("win", 1);
+
+        // win glow
+        for(const pos of res.winningCells){
+          const cell = el.reels.querySelector(`.cell[data-r="${pos.r}"][data-c="${pos.c}"]`);
+          if(cell) cell.classList.add("glow");
+        }
+
+        // extra candy on win
+        STATE.candy += CONFIG.economy.spinExtraCandyOnWin;
+
+        toast("WIN! ✨", `+${res.total} coins · +${CONFIG.economy.spinExtraCandyOnWin} Candy`);
+      }else{
+        toast("Spin selesai", "Cari win atau selesaikan missions.");
+      }
+
+      // candy drop chance
+      if(Math.random() < CONFIG.economy.spinCandyChance){
+        const c = rand(CONFIG.economy.spinCandyMin, CONFIG.economy.spinCandyMax);
+        if(c>0){
+          STATE.candy += c;
+          toast("Candy Drop 🍬", `+${c} Candy`);
+        }
+      }
+
+      // XP
+      addXP(CONFIG.pass.spinXP, "spin");
+
+      // tree points
+      addTreePoints(1);
+
+      // finalize
+      saveState();
+      renderAll();
+
+      spinning = false;
+      el.btnSpin.disabled = false;
+      el.btnAuto.disabled = false;
+      el.btnBuyTicket.disabled = false;
+      el.btnUseTicket.disabled = false;
+
+      // auto spin chain
+      if(autoLeft > 0){
+        autoLeft--;
+        if(autoLeft === 0) toast("Auto selesai 🔁", "10 spin telah dijalankan.");
+        await wait(180);
+        if(autoLeft > 0) spinOnce();
+      }
+    }
+
+    function wait(ms){ return new Promise(res=>setTimeout(res, ms)); }
+
+    /* =========================================================
+      BLOK 17L — TICKET BUY + BONUS GAME
+    ========================================================= */
+    function buyTicket(){
+      ensureDailyReset();
+      const cost = CONFIG.economy.buyTicketCandyCost;
+      if(STATE.candy < cost){
+        toast("Candy kurang 🍬", `Butuh ${cost} Candy untuk 1 Ticket.`);
+        return;
+      }
+      STATE.candy -= cost;
+      STATE.tickets += 1;
+      toast("Ticket terbeli 🎟️", `-${cost} Candy · Ticket +1`);
+      saveState(); renderAll();
+    }
+
+    // BONUS GAME state
+    let bonus = null;
+
+    function openBonus(){
+      ensureDailyReset();
+      if(STATE.tickets <= 0){
+        toast("Ticket habis 🎟️", "Beli Ticket dulu pakai Candy.");
+        return;
+      }
+
+      STATE.tickets -= 1;
+      setMissionProgress("bonus", 1);
+
+      // pity counters increased when ticket is used
+      STATE.pityRare += 1;
+      STATE.pityEpic += 1;
+
+      // bonus payload
+      bonus = {
+        picksLeft: 3,
+        picks: [],           // {mult, coins, icon, label, revealed}
+        totalCoins: 0,
+        gainXP: CONFIG.pass.ticketXP,
+        gainCandy: 6,
+        forcedGift: null,
+        resolvedGift: null,
+        done: false
+      };
+
+      // prepare 9 boxes
+      const boxes = [];
+      for(let i=0;i<9;i++){
+        const mult = pickWeighted([2,3,4,6,8], x => ({2:34,3:28,4:18,6:12,8:8}[x]));
+        boxes.push({
+          mult,
+          coins: 0,
+          revealed: false,
+          icon: "🎁",
+          label: `x${mult}`
+        });
+      }
+      bonus.picks = boxes;
+
+      // determine gift reward via pity
+      const rareHit = STATE.pityRare >= CONFIG.pity.rareEvery;
+      const epicHit = STATE.pityEpic >= CONFIG.pity.epicEvery;
+
+      let rarity = rollGiftRarity();
+
+      if(epicHit){
+        rarity = "epic";
+      }else if(rareHit){
+        rarity = (rarity === "common") ? "rare" : rarity;
+      }
+
+      // reset pity on hit thresholds
+      if(rareHit) STATE.pityRare = 0;
+      if(epicHit) STATE.pityEpic = 0;
+
+      // if epic pity: prioritize missing
+      const preferMissing = (rarity === "epic") || (rarity === "rare");
+      bonus.forcedGift = chooseGiftByRarity(rarity, preferMissing);
+
+      // open modal
+      el.pickGrid.innerHTML = "";
+      for(let i=0;i<9;i++){
+        const card = document.createElement("div");
+        card.className = "pick";
+        card.dataset.idx = i;
+        card.innerHTML = `<div class="ico">🎁</div><div class="label">Pick</div>`;
+        card.addEventListener("click", ()=> pickBox(i));
+        el.pickGrid.appendChild(card);
+      }
+
+      el.pickLeft.textContent = String(bonus.picksLeft);
+      el.bonusGain.textContent = "+0 coins";
+      el.bonusExtra.textContent = `+${bonus.gainXP} XP · +${bonus.gainCandy} Candy`;
+      el.bonusSummary.textContent = "Pilih 3 box. Tiap box memberi multiplier (coin). Setelah selesai, kamu akan dapat 1 Gift Collection (dijamin, dengan pity).";
+      el.btnBonusFinish.disabled = true;
+
+      saveState();
+      renderAll();
+
+      showModal(el.bonusBackdrop);
+    }
+
+    function pickBox(i){
+      if(!bonus || bonus.done) return;
+      const b = bonus.picks[i];
+      if(b.revealed) return;
+      if(bonus.picksLeft <= 0) return;
+
+      b.revealed = true;
+      bonus.picksLeft -= 1;
+
+      const bet = getBet();
+      // coin gain in bonus is based on bet (demo)
+      const gain = Math.round(bet * b.mult);
+      b.coins = gain;
+      bonus.totalCoins += gain;
+
+      // update UI card
+      const card = el.pickGrid.querySelector(`.pick[data-idx="${i}"]`);
+      if(card){
+        card.classList.add("revealed");
+        card.innerHTML = `<div class="ico">✨</div><div class="label">+${gain} coins</div>`;
+      }
+
+      el.pickLeft.textContent = String(bonus.picksLeft);
+      el.bonusGain.textContent = `+${bonus.totalCoins} coins`;
+
+      if(bonus.picksLeft === 0){
+        el.btnBonusFinish.disabled = false;
+        el.pickFoot.innerHTML = `Pick tersisa: <b>0</b> · Klik ✅ Selesai untuk klaim Gift Collection.`;
+      }
+    }
+
+    function revealAll(){
+      if(!bonus) return;
+      for(let i=0;i<bonus.picks.length;i++){
+        const b = bonus.picks[i];
+        if(!b.revealed){
+          b.revealed = true;
+          const card = el.pickGrid.querySelector(`.pick[data-idx="${i}"]`);
+          if(card){
+            card.classList.add("revealed");
+            card.innerHTML = `<div class="ico">🎁</div><div class="label">x${b.mult}</div>`;
+          }
+        }
+      }
+      toast("Reveal (demo) 👀", "Untuk presentasi UI, semua box ditampilkan.");
+    }
+
+    function finishBonus(){
+      if(!bonus || bonus.done) return;
+      if(bonus.picksLeft > 0){
+        toast("Belum cukup pick", "Kamu harus pick 3 box dulu.");
+        return;
+      }
+
+      bonus.done = true;
+
+      // apply rewards
+      STATE.coins += bonus.totalCoins;
+      STATE.candy += bonus.gainCandy;
+      addXP(bonus.gainXP, "ticket");
+
+      // tree points
+      addTreePoints(5);
+
+      // grant gift (forced by pity outcome)
+      bonus.resolvedGift = bonus.forcedGift;
+      grantGift(bonus.resolvedGift);
+
+      toast("Bonus claimed 🎁", `+${bonus.totalCoins} coins · +${bonus.gainCandy} Candy · Gift: ${bonus.resolvedGift.icon} ${bonus.resolvedGift.name}`);
+
+      hideModal(el.bonusBackdrop);
+      bonus = null;
+
+      saveState();
+      renderAll();
+    }
+
+    /* =========================================================
+      BLOK 17M — CRAFTING + DAILY GIFT
+    ========================================================= */
+    function craftGift(){
+      ensureDailyReset();
+      const costC = CONFIG.economy.craftCandyCost;
+      const costD = CONFIG.economy.craftDustCost;
+
+      const missing = GIFTS.filter(g => !STATE.owned[g.id]);
+      if(!missing.length){
+        toast("Semua gift sudah lengkap ✅", "Kamu sudah 12/12.");
+        return;
+      }
+      if(STATE.candy < costC || STATE.dust < costD){
+        toast("Bahan kurang 🧪", `Butuh ${costC} Candy + ${costD} Dust.`);
+        return;
+      }
+
+      STATE.candy -= costC;
+      STATE.dust -= costD;
+
+      // craft prioritizes epic missing first (feels premium)
+      const epicMissing = missing.filter(g=>g.rarity==="epic");
+      const pick = epicMissing.length ? epicMissing[rand(0, epicMissing.length-1)] : missing[rand(0, missing.length-1)];
+      grantGift(pick);
+
+      toast("Craft sukses ✨", `-${costC} Candy · -${costD} Dust · +${pick.icon} ${pick.name}`);
+
+      saveState();
+      renderAll();
+    }
+
+    function dailyGift(){
+      ensureDailyReset();
+      if(STATE.dailyGiftDay !== STATE.day){
+        STATE.dailyGiftDay = STATE.day;
+        STATE.dailyGiftClaimed = false;
+      }
+      if(STATE.dailyGiftClaimed){
+        toast("Daily Gift sudah di-claim 🎄", `Coba besok (${STATE.day})`);
+        return;
+      }
+      STATE.dailyGiftClaimed = true;
+      STATE.coins += CONFIG.economy.dailyGiftCoins;
+      STATE.candy += CONFIG.economy.dailyGiftCandy;
+      toast("Daily Gift claimed 🎄", `+${CONFIG.economy.dailyGiftCoins} coins · +${CONFIG.economy.dailyGiftCandy} Candy`);
+      saveState();
+      renderAll();
+    }
+
+    /* =========================================================
+      BLOK 17N — RENDER UI
+    ========================================================= */
+    function renderWallet(){
+      el.walletRow.innerHTML = "";
+      const items = [
+        { ico:"🪙", label:"Coins", val: STATE.coins.toLocaleString("id-ID") },
+        { ico:"🍬", label:"Candy", val: STATE.candy.toLocaleString("id-ID") },
+        { ico:"🎟️", label:"Tickets", val: STATE.tickets.toLocaleString("id-ID") },
+        { ico:"✨", label:"Dust", val: STATE.dust.toLocaleString("id-ID") },
+      ];
+      for(const it of items){
+        const d = document.createElement("div");
+        d.className = "kpi";
+        d.innerHTML = `<div class="ico">${it.ico}</div><div><b>${it.val}</b><div style="color:var(--muted);font-size:12.5px">${it.label}</div></div>`;
+        el.walletRow.appendChild(d);
+      }
+
+      el.pityText.textContent = `Pity: Rare ${STATE.pityRare}/${CONFIG.pity.rareEvery} · Epic ${STATE.pityEpic}/${CONFIG.pity.epicEvery}`;
+    }
+
+    function renderPass(){
+      const need = xpNeedFor(STATE.passLevel);
+      const pct = STATE.passLevel >= CONFIG.pass.maxLevel ? 100 : clamp((STATE.passXP / need) * 100, 0, 100);
+      el.passLevelText.textContent = `Level ${STATE.passLevel}${STATE.passLevel>=CONFIG.pass.maxLevel ? " (MAX)" : ""}`;
+      el.passMeta.textContent = STATE.passLevel>=CONFIG.pass.maxLevel ? `MAXED` : `XP ${Math.floor(STATE.passXP)} / ${need}`;
+      el.passBar.style.width = `${pct}%`;
+      el.passRewardHint.textContent = nextPassRewardHint(Math.min(STATE.passLevel+1, CONFIG.pass.maxLevel));
+    }
+
+    function renderMissions(){
+      el.missions.innerHTML = "";
+      for(const m of CONFIG.missions){
+        const prog = missionProgress(m);
+        const pct = clamp((prog / m.goal) * 100, 0, 100);
+        const claimed = !!STATE.missionClaimed[m.id];
+        const can = canClaim(m);
+
+        const box = document.createElement("div");
+        box.className = "mission";
+        box.innerHTML = `
+          <div class="missionTop">
+            <div>
+              <b>${escapeHtml(m.title)}</b>
+              <div class="desc">${escapeHtml(m.desc)}</div>
+            </div>
+            <button class="btn small ${can ? "primary" : ""}" type="button" ${(!can ? "disabled" : "")}>${claimed ? "✅ Claimed" : (can ? `Claim +${m.rewardCandy}🍬` : `+${m.rewardCandy}🍬`)}</button>
+          </div>
+          <div class="prog">
+            <div class="bar"><i style="width:${pct}%"></i></div>
+            <div style="min-width:82px;text-align:right">${Math.min(prog,m.goal)}/${m.goal}</div>
+          </div>
+        `;
+        const btn = box.querySelector("button");
+        btn.addEventListener("click", ()=> claimMission(m));
+        el.missions.appendChild(box);
+      }
+    }
+
+    function renderCollection(){
+      const got = countCollected();
+      el.collectMeta.textContent = `${got}/${GIFTS.length} Collected`;
+
+      el.collection.innerHTML = "";
+      for(const g of GIFTS){
+        const owned = !!STATE.owned[g.id];
+        const div = document.createElement("div");
+        div.className = `gift ${owned ? "" : "locked"}`;
+        div.title = `${g.name} · ${g.rarity.toUpperCase()}${owned ? " · OWNED" : ""}`;
+        div.innerHTML = `<span>${g.icon}</span><small>${escapeHtml(g.name)}</small>`;
+        el.collection.appendChild(div);
+      }
+
+      // craft hint
+      const missing = GIFTS.filter(x=>!STATE.owned[x.id]).length;
+      el.craftHint.textContent = missing ? `Biaya: ${CONFIG.economy.craftCandyCost} Candy + ${CONFIG.economy.craftDustCost} Dust (missing: ${missing})` : `Sudah 12/12 ✅`;
+    }
+
+    function renderTree(){
+      el.treePoints.textContent = `${STATE.treePoints} pts`;
+      const maxPts = CONFIG.tree.tiers[CONFIG.tree.tiers.length-1].pts;
+      const pct = clamp((STATE.treePoints / maxPts) * 100, 0, 100);
+      el.treeBar.style.width = `${pct}%`;
+
+      el.tiers.innerHTML = "";
+      CONFIG.tree.tiers.forEach((t, i)=>{
+        const claimed = STATE.treeClaimed[i];
+        const ready = STATE.treePoints >= t.pts && !claimed;
+        const div = document.createElement("div");
+        div.className = "tier";
+        div.innerHTML = `
+          <div>
+            <b>${escapeHtml(t.label)}</b>
+            <div class="meta">${STATE.treePoints}/${t.pts} pts · Reward: +${t.reward.coins} coins · +${t.reward.candy} Candy</div>
+          </div>
+          <button class="btn small ${ready ? "primary" : ""}" type="button" ${(!ready ? "disabled" : "")}>${claimed ? "✅ Claimed" : (ready ? "Claim" : "Locked")}</button>
+        `;
+        div.querySelector("button").addEventListener("click", ()=> claimTier(i));
+        el.tiers.appendChild(div);
+      });
+    }
+
+    function renderAll(){
+      ensureDailyReset();
+      renderWallet();
+      renderPass();
+      renderMissions();
+      renderCollection();
+      renderTree();
+
+      // enable/disable ticket buttons
+      el.btnUseTicket.disabled = spinning || STATE.tickets <= 0;
+      el.btnBuyTicket.disabled = spinning;
+      el.btnSpin.disabled = spinning;
+      el.btnAuto.disabled = spinning;
+    }
+
+    /* =========================================================
+      BLOK 17O — MODAL HELPERS
+    ========================================================= */
+    function showModal(backdrop){
+      backdrop.classList.add("show");
+      // basic focus management
+      const firstBtn = backdrop.querySelector("button");
+      if(firstBtn) firstBtn.focus({preventScroll:true});
+    }
+    function hideModal(backdrop){
+      backdrop.classList.remove("show");
+    }
+
+    /* =========================================================
+      BLOK 17P — EVENTS
+    ========================================================= */
+    el.btnSpin.addEventListener("click", spinOnce);
+    el.btnAuto.addEventListener("click", ()=>{
+      if(spinning) return;
+      autoLeft = 10;
+      toast("Auto start 🔁", "Menjalankan 10 spin…");
+      spinOnce();
+    });
+    el.betInput.addEventListener("change", ()=>{ getBet(); saveState(); renderAll(); });
+
+    el.btnBuyTicket.addEventListener("click", buyTicket);
+    el.btnUseTicket.addEventListener("click", openBonus);
+
+    el.btnCraft.addEventListener("click", craftGift);
+    el.btnDailyGift.addEventListener("click", dailyGift);
+
+    el.btnHow.addEventListener("click", ()=> showModal(el.howBackdrop));
+    el.btnHowClose.addEventListener("click", ()=> hideModal(el.howBackdrop));
+    el.howBackdrop.addEventListener("click", (e)=>{ if(e.target===el.howBackdrop) hideModal(el.howBackdrop); });
+
+    el.btnBonusClose.addEventListener("click", ()=> hideModal(el.bonusBackdrop));
+    el.bonusBackdrop.addEventListener("click", (e)=>{ if(e.target===el.bonusBackdrop) hideModal(el.bonusBackdrop); });
+
+    el.btnBonusRevealAll.addEventListener("click", revealAll);
+    el.btnBonusFinish.addEventListener("click", finishBonus);
+
+    el.btnReset.addEventListener("click", ()=>{
+      localStorage.removeItem(CONFIG.storageKey);
+      STATE = DEFAULT_STATE();
+      toast("Reset selesai ♻️", "State demo dihapus.");
+      buildReels();
+      renderAll();
+      saveState();
+    });
+
+    el.btnForceResetMissions.addEventListener("click", ()=>{
+      STATE.day = "1970-01-01";
+      ensureDailyReset();
+      saveState();
+      renderAll();
+    });
+
+    // esc to close modals
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape"){
+        hideModal(el.howBackdrop);
+        hideModal(el.bonusBackdrop);
+      }
+    });
+
+    /* =========================================================
+      BLOK 17Q — INIT
+    ========================================================= */
+    ensureDailyReset();
+    buildReels();
+    renderAll();
+    saveState();
+
+    /* =========================================================
+      BLOK 17R — SNOW CANVAS (PARTICLES)
+    ========================================================= */
+    (function snowFX(){
+      const canvas = document.getElementById("snow");
+      const ctx = canvas.getContext("2d");
+      let w=0,h=0,dpr=1;
+      let flakes = [];
+      const maxFlakes = 140;
+
+      function resize(){
+        dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        w = Math.floor(window.innerWidth * dpr);
+        h = Math.floor(window.innerHeight * dpr);
+        canvas.width = w; canvas.height = h;
+        canvas.style.width = "100%"; canvas.style.height = "100%";
+        flakes = Array.from({length:maxFlakes}, ()=> makeFlake(true));
+      }
+      function makeFlake(randomY=false){
+        const size = (Math.random()*2.2 + .6) * dpr;
+        return {
+          x: Math.random()*w,
+          y: randomY ? Math.random()*h : -20*dpr,
+          r: size,
+          vx: (Math.random()*0.5 - 0.25) * dpr,
+          vy: (Math.random()*1.25 + 0.6) * dpr,
+          a: Math.random()*Math.PI*2,
+          da: (Math.random()*0.02 + 0.005),
+          o: Math.random()*0.55 + 0.25
+        };
+      }
+
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        for(const f of flakes){
+          f.a += f.da;
+          f.x += f.vx + Math.sin(f.a)*0.35*dpr;
+          f.y += f.vy;
+          if(f.x < -50*dpr) f.x = w + 50*dpr;
+          if(f.x > w + 50*dpr) f.x = -50*dpr;
+          if(f.y > h + 40*dpr){
+            Object.assign(f, makeFlake(false));
+          }
+
+          ctx.globalAlpha = f.o;
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+          ctx.fillStyle = "rgba(255,255,255,.92)";
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener("resize", resize, {passive:true});
+      resize();
+      draw();
+    })();
+  </script>
+</body>
+</html>
